@@ -37,7 +37,7 @@ For Option 1:
 Download and find path to 'RCM_Glossary' directory.
 Run this command to change directory.
 ```bash
-cd 
+cd /your/working/directory/RCM_Glossary
 ```
 Run this command to get output table 'index.html':
 ```bash
