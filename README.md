@@ -10,7 +10,7 @@ Install Ubuntu here:
 https://www.microsoft.com/en-us/p/ubuntu-1804-lts/9n9tngvndl3q?activetab=pivot:overviewtab
 
 Open Ubuntu and run the following commands to install python.
-\nCheck if its already installed
+Check if its already installed
 ```bash
 python3 --version
 ```
@@ -35,7 +35,7 @@ and click 'Run'
 ## Usage
 For Option 1:
 Find path to 'RCM_Glossary' directory.
-\nRun this command to change directory.
+Run this command to change directory.
 ```bash
 cd 
 ```
