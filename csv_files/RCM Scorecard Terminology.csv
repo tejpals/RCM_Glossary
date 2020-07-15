@@ -1,0 +1,150 @@
+Metrics and Terms,Description,Logic,Time Scope
+"NCRa - Net Collection Rate, allowed",Net Collection Rate based on Primary Allowable for paid insurance claims or Primary Insurance Implied Expected for denied claims ,"Implied Total Payments divided into Allowed Amount
+0.0 SQL Filters 
+0.2 Exclude $0 denials related to bundling, duplicate claims and documentation (at charge level)
+0.3 Include Encounter level unapplied
+0.4 Calculation is always treated as a month-end number and should never included data from current month. 
+0.5 Based on 12 months of data with at a 6 full month look back. Example - Month-end report for December 2020 would use data from July 2019 to June 2020.
+
+1.0 Allowed Rules
+1.1 If Total Payments > than Allowed Amount and > than Implied Expected Use Total Payments
+1.1 If Allowed Amount > $0 Use Allowed Amount
+1.2 (else) If Implied Expected > $0 Use Implied Expected
+
+2.0 Total Payments Rules 
+2.1 Include all payments associated at the Encounter Level
+2.2 Exclude Credit Balance from Total Payments ",Monthly
+"NCRc - Net Collection Rate, contractual",Net Collection Rate based on contractual expected for paid insurance claims or denied claims ,"Implied Total Payments divided into Expected Amount
+0.0 SQL Filters - SAME AS NCRa
+
+1.0 Implied Expected Rules
+1.1 If Total Payments > than Implied Expected Use Total Payments
+1.2 (else) Use Implied Expected
+
+2.0 Total Payments Rules - SAME AS NCRa
+",Monthly
+AR Resolution Rate @ 6mos,Percent of AR resolved at 6 months ,"(Total Charges minus Implied Total Payments minus Adjustments) divided into Total Charges
+0.0 SQL Filters
+0.2 Charges based on total charges billed at 6 full months out based on charge submit date
+0.3 Payments and adjustments based on assocaited payments & adjustments to item 0.2 for the last 6 full months.
+0.4 Payments should exclude Credit Balances
+",Monthly
+AR Resolution Rate @ 3mos,Percent of AR resolved at 3 months ,"(Total Charges minus Implied Total Payments minus Adjustments) divided into Total Charges
+0.0 SQL Filters
+0.2 Charges based on total charges billed at 3 full months out based on charge submit date
+0.3 Payments and adjustments based on assocaited payments & adjustments to item 0.2 for the last 3 full months.
+0.4 Payments should exclude Credit Balances",Monthly
+Days in AR,Total open AR against average daily revenue. ,"Total AR Amount divide by daily revenue [last 3 months of revenue divided by 90)
+0.0 SQL Filters
+0.2 Total Open AR based on All open AR as of Month-End of prior month based on charge submit date
+0.3 Excludes Credit Balances
+0.4 Includes Unapplied at both the Encounter and Account levels ",Monthly
+Clean Claim Rate,"Clean claim rate is the percentage of claims that were submitted that triggered a payment without a claim edit task or valid denial task being assigned. Valid denials excludes denials tied to bundling, duplicates or documentation requests. ","(Total Number of Encounters Submitted minus Total Number of Failed Encounters) divided by Total Number of Encounters Submitted
+Fail Encounter = Any encounter that had a task assigned associated to a claim edit or a task related to a denied charge on the encounter.
+0.0 SQL Filters 
+0.2 Exclude $0 denials (at charge level) related to bundling, duplicate claims and documentation
+0.3 Include only Encounters based on a initial primary payment in the prior month (this is not DOS driven) 
+0.4 Calculation is always treated as a month-end number and should never included data from current month. 
+0.5 Based on 12 months of data with at a 6 full month look back. Example - Month-end report for December 2020 would use data from July 2019 to June 2020.
+Weekly Report Note: Weekly report would follow same rules but base on actual date, not month end. Based on above example, if report ran on Dec 12th, data would be used from July 12, 2019 to June 11, 2020.",Monthly/Weekly
+AR%<60,Open AR percentage less then 60 days old from charge submit date,"Open ARp divided into Total Open AR
+0.0 SQL Filters
+0.2 Total Open AR based on All open AR as of Month-End of prior month based on charge submit date
+0.3 Open ARp based on Open AR last the last 2 full months based on charge submit date
+0.4 Daily average charge balance based on last 3 full months of charges divided by 90",Monthly
+Primary AR%>90,Open AR percentage greater than 90 days old from charge submit date for insurance primary payers.,"Open ARp divided into Total Open AR
+0.0 SQL Filters
+0.2 Total Open AR based on All open AR as of Month-End of prior month based on charge submit date
+0.3 Open ARp based on Open AR older then 3 full months based on charge submit date
+0.4 Daily average charge balance based on last 3 full months of charges divided by 90
+0.5 Based on Primary Insurance Payer only that still have a balance (COB1 balance > $0)",Monthly
+Secondary AR%>120 ,Open AR percentage greater than 120 days old from charge submit date for 2nd and 3rd level payers. ,"Open ARp divided into Total Open AR
+0.0 SQL Filters
+0.2 Total Open AR based on All open AR as of Month-End of prior month based on charge submit date
+0.3 Open ARp based on Open AR older then 4 full months based on charge submit date
+0.4 Daily average charge balance based on last 3 full months of charges divided by 90
+0.5 Based on 2nd or 3rd level Insurance Payer only that still have a balance (COB2 or COB3 balance > $0)",Monthly
+Patient AR%>120 ,Open AR percentage greater than 120 days old from charge submit date for all patient balance types.,"Open ARp divided into Total Open AR
+0.0 SQL Filters
+0.2 Total Open AR based on All open AR as of Month-End of prior month based on charge submit date
+0.3 Open ARp based on Open AR older then 4 full months based on charge submit date
+0.4 Daily average charge balance based on last 3 full months of charges divided by 90
+0.5 Based on Patient balance only that still have a balance (PAT balance > $0)",Monthly
+Unapplied %>30,Open unapplied percentage greater than 30 days from adjudicated date for encounter level or from unapplied create date for account level. ,"Unapplied dollars over 30 days old divided into total unapplied dollars
+0.0 SQL Filters
+
+0.2 Include Acct Level & Encounter Level unapplied 
+0.3 Time scope based on posted date for account level and adjudicated date for encounter level
+",Monthly/Weekly
+Credit Balance %>60,Unresolved credit balances greater than 60 days from date of last payment. ,"Credit balance dollars over 60 days old divided into total credit balance dollars.
+0.0 SQL Filters
+
+0.2 Time scope based on Last Payment Posted date at the encounter level",Monthly/Weekly
+Denial%,Total claims denied for reporting month against total claims submitted based on Primary Payer Initial payments for the reporting month. An encounter can only be counted once for both total claims and total denied. Primary Payers only.,"Total count of unique denied encounters divided into total count of uniqie paid encounters 
+0.0 SQL Filters
+0.1 Count of Encounters that had a Primary EOB posted
+0.2 Count of Encounters that had at least 1 impactful denial (impactful defined as a denial that cause 1 or more line items to not be paid)
+0.3 Exclude bundling, duplicate or documentation related denials
+0.4 Time scope based on initial primary payment date
+",Monthly/Weekly
+Denial Recovery%,Number of denied claims that were paid based on last primary payment in the reporting month against total number of claims denied but resolved in that same month. Resolved claims are either paid or written off. Primary Payers only.,"Total count of denied line items paid divided into total count of denied line items resolved
+0.0 SQL Filters
+0.1 Count of denied line items paid based on unique charge lines 
+0.2 Count of denied line items paid or written off based on unique charge lines (resolved component)
+0.3 Time scope based on payment date or charge written off date",Monthly/Weekly
+Fatal Denial %,Number of denied claims that were written off based on the write off adjustment date in the reporting month against total number of claims denied and resolved in that same month. Resolved claims are either paid or written off. Primary Payers only.,"Total count of denied line items written off divided into total count of denied line items resolved
+0.0 SQL Filters
+0.1 Count of denied line items written off based on unique charge lines 
+0.2 Count of denied line items paid or written off based on unique charge lines (resolved component)
+0.3 Time scope based on payment date or charge written off date",Monthly/Weekly
+Underpaid Revocery$,Total dollars of Underpayments based on last allowed amount compared to first allowed amount where last allowed has increased. Primary Payers only.,"Last Primary Allowed minus First Primary Allowed where Last Primary Allowed greater then First Primary Allowed
+0.0 SQL Filters
+
+0.2 Initial Primary Allowed greater then $0 
+0.3 Last Primary Allowed greater then Initial Primary Allowed 
+0.4 Time scope based on Last Primary Payment Date ",Monthly/Weekly
+Charge Lag,Days from DOS to charge creation ,"Average of Charge Create Date minus Date of Service at encounter level
+0.0 SQL Filters
+
+0.2 Charge Create Date not null
+0.3 Time scope based on Charge Create Date ",Monthly/Weekly
+Claim Lag,Days from charge creation to claim submission. Primary Payers only.,"Average of Claim Submit Date minus Charge Create Date at encounter level. 
+0.0 SQL Filters
+
+0.2 Claim Submit Date not null
+0.3 Time scope based on Claim Submit Date ",Monthly/Weekly
+Payment Lag,Days from Claim Submit Date to Payment Deposit Date. Primary Payers only.,"Average days of Initial Primary Payment Deposit Date minus Claim Submit Date at encounter level
+0.0 SQL Filters
+
+0.2 Claim Submit Date not null
+0.3 Time scope based on Initial Primary Payment Deposit Date",Monthly/Weekly
+Payment Post Lag,Days from Primary Payment Deposit Date to Payment Posting Date ,"Average days of Payment Posting Date minus Primary Payment Deposit Date at encounter level
+0.0 SQL Filters
+
+0.2 Claim Submit Date not null
+0.3 Time scope based on Payment Posting Date ",Monthly/Weekly
+Timely Denial Count,Total number of Timely filing write offs for reporting month based on write off adjustment date. ,"Total count of unique encounters that had 1 or more timely filing denials 
+0.0 SQL Filters
+
+0.2 Timely denial tied to  Last Primary Payment
+0.3 Time scope based on Last Primary Payment Date ",Monthly/Weekly
+Contract Expected,"If no Contract Expected exists, set field valued to NULL, as a Expected of $0.00 can be a valid expected for contracts. ","If no Contract Expected exists, set field valued to NULL, as a Expected of $0.00 can be a valid expected for contracts. ",N/A
+Allowed Amount,Use Last Allowed Amount based on primary payer contracted payment,Use Last Allowed Amount based on primary payer contracted payment,N/A
+Contracted Amount,Charges minus Contractual Addjustment,Charges minus Contractual Addjustment,N/A
+Max Allowed,Max allowed based on primary insurance payments,Max allowed based on primary insurance payments,N/A
+Implied Expected,"1.1 Set to $0 if valid denial like bundled or duplicate and no payment exists
+1.2 (else) Use Contract Expected if exists 
+1.3  (else) Use Medicare Rate if > $0 and Total Payments < Medicare Rate
+1.4 (else) Use Total Payments if > 0 And > Medicare Rate
+1.5 (else) Use Total Payments if > 0 and > 50% of Billed Charge
+1.6 (else) Use 50% of Billed Charge
+","1.1 Set to $0 if valid denial like bundled or duplicate and no payment exists
+1.2 (else) Use Contract Expected if exists 
+1.3  (else) Use Medicare Rate if > $0 and Total Payments < Medicare Rate
+1.4 (else) Use Total Payments if > 0 And > Medicare Rate
+1.5 (else) Use Total Payments if > 0 and > 50% of Billed Charge
+1.6 (else) Use 50% of Billed Charge
+",N/A
+Implied Total Payment,Total payment minus credit balnce,Total payment minus credit balnce,N/A
+Implied Insurance Payment,Lesser of; 1) Total Insurance Payments or 2) Max Allowed,Lesser of; 1) Total Insurance Payments or 2) Max Allowed,N/A
+Implied Patient Payment,Lesser of; 1) Total Patient Payments or 2) Max Allowed - Implied Insurance Payment ,Lesser of; 1) Total Patient Payments or 2) Max Allowed - Implied Insurance Payment ,N/A

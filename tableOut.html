@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+table {
+  font-family: arial, sans-serif;
+  border-collapse: collapse;
+  max-width: 80%;
+  background-color: #f4f0ea;
+  margin: 20px;
+}
+
+td, th {
+  border: 1px solid lightgray;
+  text-align: left;
+  padding: 8px;
+}
+
+body {
+  background-color: white;
+}
+
+th {
+  background: #ababab;
+  position: sticky;
+  top: 0;
+}
+
+.glossary {
+  display: none;
+  margin-left: 10%;
+}
+
+caption {
+  font-size: 20px;
+  font-weight: bold;
+}
+
+.tableLink {
+  margin-left: 10px;
+  text-decoration: none;
+  color: black;
+  border: 1px solid gray;
+  padding: 5px;
+}
+
+h3 {
+  margin-left: 40px;
+}
+
+.tooltip {
+  position: relative;
+  display: inline-block;
+}
+
+.tooltip .tooltiptext {
+  visibility: hidden;
+  width: 120px;
+  background-color: black;
+  color: #fff;
+  text-align: center;
+  border-radius: 6px;
+  padding: 5px 0;
+  
+  /* Position the tooltip */
+  position: absolute;
+  z-index: 1;
+}
+
+.tooltip:hover .tooltiptext {
+  visibility: visible;
+}
+
+</style>
+<script>
+  function showTable(tableID) {
+    var x = document.getElementById(tableID);
+    var backtoTopBtn = document.getElementById("backtotop")
+    tables = document.getElementsByTagName('table');
+    if (x.style.display === "block") {
+      x.style.display = "none";
+      backtoTopBtn.style.display = "none";
+      return;
+    }
+    for (i = 0; i < tables.length; i++) {
+      tables[i].style.display = 'none';
+    }
+    if (x.style.display === "none") {
+      x.style.display = "block";
+      backtoTopBtn.style.display = "block";
+    } 
+  }
+</script>
+</head>
+<body id="body">
+  <div style="margin:auto;width:50%;text-align:center">
+    <h2 id="heading">Glossary</h2>
+  </div>
+
+  <div style="margin-left: 10%">
+    <button onclick="showTable('tableBody')" style="margin-left:10%">
+      <div class="tooltip">RCM Reporting Dictionary
+        <span class="tooltiptext">Summary goes here</span>
+      </div>
+    </button>
+    <button onclick="showTable('sample1')" style="margin-left:10%">
+      <div class="tooltip">Sample Table 1
+        <span class="tooltiptext">Summary goes here</span>
+      </div>
+    </button>
+    <button onclick="showTable('sample2')" style="margin-left:10%">
+      <div class="tooltip">Sample Table 2
+        <span class="tooltiptext">Summary goes here</span>
+      </div>
+    </button>
+  </div>
+  
+  <table id="tableBody" class="glossary" style="display:none;">
+    <caption>RCM Reporting Dictionary</caption>
+    <thead>
+      <tr>
+        
+        <th><b>KPI/Term</b></th>
+        
+        <th><b>Description</b></th>
+        
+        <th><b>Logic</b></th>
+        
+      </tr>
+    </thead>
+    
+    <tbody>
+      
+      <tr>
+        
+          <td><b>NCRa</b></td>
+        
+          <td>Net Collection Rate based on Primary Allowable for<br> paid insurance claims or Primary Insurance Implied<br> Expected for denied claims</td>
+        
+          <td>Implied Total Payments divided into Allowed Amount<br><b>0.0 SQL Filters</b> <br>0.1 Exclude Admin Financial Class <br>0.2 Exclude $0 denials related to bundling, duplicate claims and documentation (at charge level)<br>0.3 Include Encounter level unapplied<br>0.4 Calculation is always treated as a month-end number and should never included data from current month. <br>0.5 Based on 12 months of data with at a 6 full month look back. Example - Month-end report for December 2020 would use data from July 2019 to June 2020.<br><br>1.0 Allowed Rules<br>1.1 If Total Payments &gt; than Allowed Amount and &gt; than Implied Expected Use Total Payments<br>1.1 If Allowed Amount &gt; $0 Use Allowed Amount<br>1.2 (else) If Implied Expected &gt; $0 Use Implied Expected<br><br>2.0 Total Payments Rules <br>2.1 Include all payments associated at the Encounter Level<br>2.2 Exclude Credit Balance from Total Payments </td>
+        
+      </tr>
+      
+      <tr>
+        
+          <td><b>NCRc</b></td>
+        
+          <td>Net Collection Rate based on contractual expected<br> for paid insurance claims or denied claims</td>
+        
+          <td>Implied Total Payments divided into Expected Amount<br><b>0.0 SQL Filters</b> - SAME AS NCRa<br><br>1.0 Implied Expected Rules<br>1.1 If Total Payments &gt; than Implied Expected Use Total Payments<br>1.2 (else) Use Implied Expected<br><br>2.0 Total Payments Rules - SAME AS NCRa<br></td>
+        
+      </tr>
+      
+      <tr>
+        
+          <td><b>AR Resolution Rate @ 6mos</b></td>
+        
+          <td>Percent of AR resolved at 6 months</td>
+        
+          <td>(Total Charges minus Implied Total Payments minus Adjustments) divided into Total Charges<br><b>0.0 SQL Filters</b><br>0.1 Exclude Admin Financial Class <br>0.2 Charges based on total charges billed at 6 full months out based on charge submit date<br>0.3 Payments and adjustments based on assocaited payments &amp; adjustments to item 0.2 for the last 6 full months.<br>0.4 Payments should exclude Credit Balances<br></td>
+        
+      </tr>
+      
+      <tr>
+        
+          <td><b>AR Resolution Rate @ 3mos</b></td>
+        
+          <td>Percent of AR resolved at 6 months</td>
+        
+          <td>(Total Charges minus Implied Total Payments minus Adjustments) divided into Total Charges<br><b>0.0 SQL Filters</b><br>0.1 Exclude Admin Financial Class <br>0.2 Charges based on total charges billed at 3 full months out based on charge submit date<br>0.3 Payments and adjustments based on assocaited payments &amp; adjustments to item 0.2 for the last 3 full months.<br>0.4 Payments should exclude Credit Balances</td>
+        
+      </tr>
+      
+      <tr>
+        
+          <td><b>Days in AR</b></td>
+        
+          <td>Total open AR against average daily revenue.</td>
+        
+          <td>Total AR Amount divide by daily revenue [last 3 months of revenue divided by 90)<br><b>0.0 SQL Filters</b><br>0.1 Exclude Admin Financial Class <br>0.2 Total Open AR based on All open AR as of Month-End of prior month based on charge submit date<br>0.3 Excludes Credit Balances<br>0.4 Includes Unapplied at both the Encounter and Account levels </td>
+        
+      </tr>
+      
+      <tr>
+        
+          <td><b>Clean Claim Rate</b></td>
+        
+          <td>Clean claim rate is the percentage of claims that<br> were submitted that triggered a payment without a<br> claim edit task or valid denial task being assigned.<br> Valid denials excludes denials tied to bundling,<br> duplicates or documentation requests.</td>
+        
+          <td>(Total Number of Encounters Submitted minus Total Number of Failed Encounters) divided by Total Number of Encounters Submitted<br>Fail Encounter = Any encounter that had a task assigned associated to a claim edit or a task related to a denied charge on the encounter.<br><b>0.0 SQL Filters</b> <br>0.1 Exclude Admin Financial Class <br>0.2 Exclude $0 denials (at charge level) related to bundling, duplicate claims and documentation<br>0.3 Include only Encounters based on a initial primary payment in the prior month (this is not DOS driven) <br>0.4 Calculation is always treated as a month-end number and should never included data from current month. <br>0.5 Based on 12 months of data with at a 6 full month look back. Example - Month-end report for December 2020 would use data from July 2019 to June 2020.<br>Weekly Report Note: Weekly report would follow same rules but base on actual date, not month end. Based on above example, if report ran on Dec 12th, data would be used from July 12, 2019 to June 11, 2020.</td>
+        
+      </tr>
+      
+      <tr>
+        
+          <td><b>AR%&lt;60</b></td>
+        
+          <td>Open AR percentage less then 60 days old from charge<br> submit date</td>
+        
+          <td>Open ARp divided into Total Open AR<br><b>0.0 SQL Filters</b><br>0.1 Exclude Admin Financial Class <br>0.2 Total Open AR based on All open AR as of Month-End of prior month based on charge submit date<br>0.3 Open ARp based on Open AR last the last 2 full months based on charge submit date<br>0.4 Daily average charge balance based on last 3 full months of charges divided by 90</td>
+        
+      </tr>
+      
+      <tr>
+        
+          <td><b>Primary AR%&gt;90</b></td>
+        
+          <td>Open AR percentage greater than 90 days old from<br> charge submit date for insurance primary payers</td>
+        
+          <td>Open ARp divided into Total Open AR<br><b>0.0 SQL Filters</b><br>0.1 Exclude Admin Financial Class <br>0.2 Total Open AR based on All open AR as of Month-End of prior month based on charge submit date<br>0.3 Open ARp based on Open AR older then 3 full months based on charge submit date<br>0.4 Daily average charge balance based on last 3 full months of charges divided by 90<br>0.5 Based on Primary Insurance Payer only that still have a balance (COB1 balance &gt; $0)</td>
+        
+      </tr>
+      
+      <tr>
+        
+          <td><b>Secondary AR%&gt;120</b></td>
+        
+          <td>Open AR percentage greater than 120 days old from<br> charge submit date for 2nd and 3rd level payers</td>
+        
+          <td>Open ARp divided into Total Open AR<br><b>0.0 SQL Filters</b><br>0.1 Exclude Admin Financial Class <br>0.2 Total Open AR based on All open AR as of Month-End of prior month based on charge submit date<br>0.3 Open ARp based on Open AR older then 4 full months based on charge submit date<br>0.4 Daily average charge balance based on last 3 full months of charges divided by 90<br>0.5 Based on 2nd or 3rd level Insurance Payer only that still have a balance (COB2 or COB3 balance &gt; $0)</td>
+        
+      </tr>
+      
+      <tr>
+        
+          <td><b>Patient AR%&gt;120</b></td>
+        
+          <td>Open AR percentage greater than 120 days old from<br> charge submit date for all patient balance types</td>
+        
+          <td>Open ARp divided into Total Open AR<br><b>0.0 SQL Filters</b><br>0.1 Exclude Admin Financial Class <br>0.2 Total Open AR based on All open AR as of Month-End of prior month based on charge submit date<br>0.3 Open ARp based on Open AR older then 4 full months based on charge submit date<br>0.4 Daily average charge balance based on last 3 full months of charges divided by 90<br>0.5 Based on Patient balance only that still have a balance (PAT balance &gt; $0)</td>
+        
+      </tr>
+      
+      <tr>
+        
+          <td><b>Unapplied %&gt;30</b></td>
+        
+          <td>Open unapplied percentage greater than 30 days from<br> adjudicated date for encounter level or from<br> unapplied create date for account level.</td>
+        
+          <td>Unapplied dollars over 30 days old divided into total unapplied dollars<br><b>0.0 SQL Filters</b><br><span style="color:red">0.1 Exclude Admin Financial Class ?</span><br>0.2 Include Acct Level &amp; Encounter Level unapplied <br>0.3 Time scope based on posted date for account level and adjudicated date for encounter level<br></td>
+        
+      </tr>
+      
+      <tr>
+        
+          <td><b>Credit Balance %&gt;60</b></td>
+        
+          <td>Unresolved credit balances greater than 60 days from<br> date of last payment.</td>
+        
+          <td>Credit balance dollars over 60 days old divided into total credit balance dollars.<br><b>0.0 SQL Filters</b><br><span style="color:red">0.1 Exclude Admin Financial Class ?</span><br>0.2 Time scope based on Last Payment Posted date at the encounter level</td>
+        
+      </tr>
+      
+      <tr>
+        
+          <td><b>Denial%</b></td>
+        
+          <td>Total claims denied for reporting month against<br> total claims submitted based on Primary Payer<br> Initial payments for the reporting month. An<br> encounter can only be counted once for both total<br> claims and total denied.</td>
+        
+          <td>Total count of unique denied encounters divided into total count of uniqie paid encounters <br><b>0.0 SQL Filters</b><br>0.1 Count of Encounters that had a Primary EOB posted<br>0.2 Count of Encounters that had at least 1 impactful denial (impactful defined as a denial that cause 1 or more line items to not be paid)<br>0.3 Exclude bundling, duplicate or documentation related denials<br>0.4 Time scope based on initial primary payment date<br></td>
+        
+      </tr>
+      
+      <tr>
+        
+          <td><b>Denial Recovery%</b></td>
+        
+          <td>Number of denied claims that were paid based on last<br> primary payment in the reporting month against total<br> number of claims denied but resolved in that same<br> month. Resolved claims are either paid or written<br> off.</td>
+        
+          <td>Total count of denied line items paid divided into total count of denied line items resolved<br><b>0.0 SQL Filters</b><br>0.1 Count of denied line items paid based on unique charge lines <br>0.2 Count of denied line items paid or written off based on unique charge lines (resolved component)<br>0.3 Time scope based on payment date or charge written off date</td>
+        
+      </tr>
+      
+      <tr>
+        
+          <td><b>Fatal Denial %</b></td>
+        
+          <td>Number of denied claims that were written off based<br> on the write off adjustment date in the reporting<br> month against total number of claims denied and<br> resolved in that same month. Resolved claims are<br> either paid or written off.</td>
+        
+          <td>Total count of denied line items written off divided into total count of denied line items resolved<br><b>0.0 SQL Filters</b><br>0.1 Count of denied line items written off based on unique charge lines <br>0.2 Count of denied line items paid or written off based on unique charge lines (resolved component)<br>0.3 Time scope based on payment date or charge written off date</td>
+        
+      </tr>
+      
+      <tr>
+        
+          <td><b>Underpaid Revocery$</b></td>
+        
+          <td>Total dollars of Underpayments based on last allowed<br> amount compared to first allowed amount where last<br> allowed has increased.</td>
+        
+          <td>Last Primary Allowed minus First Primary Allowed where Last Primary Allowed greater then First Primary Allowed<br><b>0.0 SQL Filters</b><br><span style="color:red">0.1 Exclude Admin Financial Class ?</span><br>0.2 Initial Primary Allowed greater then $0 <br>0.3 Last Primary Allowed greater then Initial Primary Allowed <br>0.4 Time scope based on Last Primary Payment Date </td>
+        
+      </tr>
+      
+      <tr>
+        
+          <td><b>Charge Lag</b></td>
+        
+          <td>Days from DOS to charge creation</td>
+        
+          <td>Average of Charge Create Date minus Date of Service at encounter level<br><b>0.0 SQL Filters</b><br><span style="color:red">0.1 Exclude Admin Financial Class ?</span><br>0.2 Charge Create Date not null<br>0.3 Time scope based on Charge Create Date </td>
+        
+      </tr>
+      
+      <tr>
+        
+          <td><b>Claim Lag</b></td>
+        
+          <td>Days from charge creation to claim submission</td>
+        
+          <td>Average of Claim Submit Date minus Charge Create Date at encounter level. <br><b>0.0 SQL Filters</b><br><span style="color:red">0.1 Exclude Admin Financial Class ?</span><br>0.2 Claim Submit Date not null<br>0.3 Time scope based on Claim Submit Date </td>
+        
+      </tr>
+      
+      <tr>
+        
+          <td><b>Payment Lag</b></td>
+        
+          <td>Days from Claim Submit Date to Payment Deposit Date</td>
+        
+          <td>Average days of Initial Primary Payment Deposit Date minus Claim Submit Date at encounter level<br><b>0.0 SQL Filters</b><br><span style="color:red">0.1 Exclude Admin Financial Class ?</span><br>0.2 Claim Submit Date not null<br>0.3 Time scope based on Initial Primary Payment Deposit Date</td>
+        
+      </tr>
+      
+      <tr>
+        
+          <td><b>Payment Post Lag</b></td>
+        
+          <td>Days from Primary Payment Deposit Date to Payment<br> Posting Date</td>
+        
+          <td>Average days of Payment Posting Date minus Primary Payment Deposit Date at encounter level<br><b>0.0 SQL Filters</b><br><span style="color:red">0.1 Exclude Admin Financial Class ?</span><br>0.2 Claim Submit Date not null<br>0.3 Time scope based on Payment Posting Date </td>
+        
+      </tr>
+      
+    </tbody>
+  </table>
+
+  <table id='sample1' class="glossary" style="display:none;">
+    <caption>Sample table 1</caption>
+    <tr>
+      <th>Company</th>
+      <th>Contact</th>
+      <th>Country</th>
+    </tr>
+    <tr>
+      <td>Alfreds Futterkiste</td>
+      <td>Maria Anders</td>
+      <td>Germany</td>
+    </tr>
+    <tr>
+      <td>Centro comercial Moctezuma</td>
+      <td>Francisco Chang</td>
+      <td>Mexico</td>
+    </tr>
+    <tr>
+      <td>Ernst Handel</td>
+      <td>Roland Mendel</td>
+      <td>Austria</td>
+    </tr>
+    <tr>
+      <td>Island Trading</td>
+      <td>Helen Bennett</td>
+      <td>UK</td>
+    </tr>
+    <tr>
+      <td>Laughing Bacchus Winecellars</td>
+      <td>Yoshi Tannamuri</td>
+      <td>Canada</td>
+    </tr>
+    <tr>
+      <td>Magazzini Alimentari Riuniti</td>
+      <td>Giovanni Rovelli</td>
+      <td>Italy</td>
+    </tr>
+  </table>
+  <table id='sample2' class="glossary" style="display:none">
+    <caption>Sample table 2</caption>
+    <tr>
+      <th>Company</th>
+      <th>Contact</th>
+      <th>Country</th>
+    </tr>
+    <tr>
+      <td>Alfreds Futterkiste</td>
+      <td>Maria Anders</td>
+      <td>Germany</td>
+    </tr>
+    <tr>
+      <td>Centro comercial Moctezuma</td>
+      <td>Francisco Chang</td>
+      <td>Mexico</td>
+    </tr>
+    <tr>
+      <td>Ernst Handel</td>
+      <td>Roland Mendel</td>
+      <td>Austria</td>
+    </tr>
+    <tr>
+      <td>Island Trading</td>
+      <td>Helen Bennett</td>
+      <td>UK</td>
+    </tr>
+    <tr>
+      <td>Laughing Bacchus Winecellars</td>
+      <td>Yoshi Tannamuri</td>
+      <td>Canada</td>
+    </tr>
+    <tr>
+      <td>Magazzini Alimentari Riuniti</td>
+      <td>Giovanni Rovelli</td>
+      <td>Italy</td>
+    </tr>
+  </table>
+  
+  <div id="backtotop" style="margin-left: 10%; display: none;">
+    <button style="padding: 5px;"><a href="#heading" style="text-decoration: none;color: black;">Back to top</a></button>
+  </div>
+</body>
+</html>
