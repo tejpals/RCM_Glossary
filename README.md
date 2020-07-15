@@ -34,7 +34,7 @@ and click 'Run'
 
 ## Usage
 For Option 1:
-Find path to 'RCM_Glossary' directory.
+Download and find path to 'RCM_Glossary' directory.
 Run this command to change directory.
 ```bash
 cd 
